@@ -13,19 +13,23 @@ class Player extends FlxSprite {
 
 	public var checkpoint:FlxPoint;
 
-	var speed:Float = 20;
-	var max:Float = 100;
+	var speed:Float = 5;
+	var max:Float = 200;
 	
 	public function new(x:Float, y:Float) {
 		super(x,y);
-		makeGraphic(32,16, flixel.util.FlxColor.BLUE);
+		loadGraphic("assets/images/submarine.png");
 		maxVelocity.x = maxVelocity.y = max;
-		drag.x = drag.y = 200;
+		drag.x = drag.y = 100;
+
+		setFacingFlip(LEFT, false, false);
+		setFacingFlip(RIGHT, true, false);
 
 		checkpoint = FlxPoint.get(0,0);
 	}
 
 	override public function update(elapsed:Float) {
+		angle = velocity.x/10;
 		up = FlxG.keys.anyPressed([UP, W]);
 		down = FlxG.keys.anyPressed([DOWN, A]);
 		left = FlxG.keys.anyPressed([LEFT, S]);
@@ -39,9 +43,11 @@ class Player extends FlxSprite {
 		}
 		if (left) {
 			velocity.x += -speed;
+			facing = LEFT;
 		}
 		if (right) {
 			velocity.x += speed;
+			facing = RIGHT;
 		}
 
 		if (x < 2) {
@@ -64,10 +70,6 @@ class Player extends FlxSprite {
 		super.update(elapsed);
 	}
 
-	override public function destroy()
-	{
-		checkpoint.put();
-		super.destroy(elapsed);
-	}
+	
 	
 }
