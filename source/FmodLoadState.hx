@@ -8,6 +8,8 @@ import flixel.FlxState;
 import flixel.FlxSprite;
 
 class FmodLoadState extends FlxState {
+    var startTimer:Bool;
+    var timer:Int = 210;
 	override public function create():Void {
         FmodManager.Initialize();
 
@@ -25,7 +27,16 @@ class FmodLoadState extends FlxState {
     }
     override public function update(elapsed:Float):Void {
         if(FmodManager.IsInitialized()){
+            startTimer = true;
+            
+        }
+
+        if (timer < 0 ) {
             FlxG.switchState(new PlayState());
+        }
+
+        if (startTimer) {
+            timer -= 1;
         }
     }
 }
