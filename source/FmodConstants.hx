@@ -6,8 +6,10 @@
 package;
 
 class FmodSongs {
+    public static inline var Lofi:String = "event:/Music/Lofi";
 }
 
 class FmodSFX {
     public static inline var Engine:String = "event:/SFX/Engine";
+    public static inline var Nested_Event:String = "event:/SFX/Engine/Nested_Event";
 }

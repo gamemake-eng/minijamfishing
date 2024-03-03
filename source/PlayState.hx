@@ -13,7 +13,12 @@ import haxe.io.Path;
 import objects.Player;
 import shader.Water;
 import shader.BlueTint;
+import flixel.math.FlxPoint;
 import flixel.math.FlxMath;
+import flixel.util.FlxSpriteUtil;
+import flixel.FlxSprite;
+import flixel.group.FlxGroup;
+
 
 import openfl.Assets;
 import openfl.filters.BitmapFilter;
@@ -42,6 +47,20 @@ class PlayState extends FlxState
 	var mapW:Int;
 	var mapH:Int;
 
+	var trash:FlxTypedGroup<objects.Trash>;
+	var fish:FlxTypedGroup<objects.Fish>;
+
+	var line:FlxSprite;
+	var linePos:FlxPoint;
+	var linePosG:FlxPoint;
+
+	var corpse:FlxSprite;
+	var corpseGrab:Bool = false;
+
+	var speed:Float = 0.1;
+
+
+
 	override public function onFocus() {
         super.onFocus();
         FmodManager.SetEventParameterOnSong("HighPass", 0);
@@ -56,8 +75,11 @@ class PlayState extends FlxState
 	{
 		super.create();
 
+		line = new FlxSprite();
+        
 
-		FmodManager.PlaySoundOneShot(FmodSFX.Engine);
+        linePos = FlxPoint.get(0,0);
+        linePosG = FlxPoint.get(0,0);
 
 		var tiledLevel:TiledMap = new TiledMap("assets/data/test.tmx");
 
@@ -68,8 +90,13 @@ class PlayState extends FlxState
 		mapW = tiledLevel.width;
 		mapH = tiledLevel.height;
 
-		FlxG.worldBounds.set(-10,-10,tileSize*mapW+10,tileSize*mapH+10);
+		line.makeGraphic(FlxG.width, (tileSize*mapH), 0, true);
+        add(line);
+
+		FlxG.worldBounds.set(0,0,tileSize*mapW,tileSize*mapH);
 		FlxG.worldDivisions=10;
+
+		trash = new FlxTypedGroup<objects.Trash>();
 
 		for (layer in tiledLevel.layers)
 		{
@@ -79,6 +106,37 @@ class PlayState extends FlxState
 
 		    walls.loadMapFromArray(l.tileArray, mapW, mapH,tilesheetPath, tileSize, tileSize, FlxTilemapAutoTiling.OFF, 1,1,1);
 		  }
+
+		  if (layer.type == TiledLayerType.OBJECT) {
+		  	var l:TiledObjectLayer=cast (layer, TiledObjectLayer);
+		  	switch(layer.name)
+		  	{
+		  		case 'trash': {
+
+		  			for (o in l.objects) {
+		  				trash.add(new objects.Trash(o.x, o.y));
+		  			}
+
+		  		}
+
+		  		case 'fish': {
+
+		  			for (o in l.objects) {
+		  				fish.add(new objects.Fish(o.x, o.y));
+		  			}
+
+		  		}
+
+		  		case 'body': {
+		  			for(o in l.objects)
+		  			{
+		  				corpse = new FlxSprite(o.x,o.y);
+		  				corpse.loadGraphic("assets/images/corpse.png");
+		  				add(corpse);
+		  			}
+		  		}
+		  	}
+		  }
 		    
 	  	}
 
@@ -87,19 +145,27 @@ class PlayState extends FlxState
 
 		add(player);
 		add(walls);
+		add(trash);
+		
 
 		watershader = new Water(90);
 
 		tintshader = new BlueTint();
 
-		FlxG.game.setFilters([new ShaderFilter(watershader), new ShaderFilter(tintshader)]);
+		FlxG.game.setFilters([new ShaderFilter(tintshader), new ShaderFilter(watershader)]);
+
+		FmodManager.PlaySong(FmodSongs.Lofi);
 
 	}
 
 	override public function update(elapsed:Float)
 	{
-		super.update(elapsed);
-		FmodManager.Update();
+
+		linePosG.x = player.x + player.origin.x;
+		linePosG.y = player.y + 60;
+
+		linePos.x += (linePosG.x - linePos.x) * speed;
+		linePos.y += (linePosG.y - linePos.y) * speed;
 
 		shaderTimer += elapsed;
 		if (shaderTimer > Math.PI)
@@ -115,6 +181,8 @@ class PlayState extends FlxState
 
 		player.y = FlxMath.bound(player.y, player.height+1, (tileSize*mapH)-player.height);
 
+		FmodManager.SetEventParameterOnSong("Depth", (player.y/(((tileSize*(mapH/4))-player.height)))*100);
+
 		FlxG.camera.color = FlxColor.BLUE;
 
 		FlxG.camera.follow(player,FlxCameraFollowStyle.SCREEN_BY_SCREEN, 0.1);
@@ -123,6 +191,37 @@ class PlayState extends FlxState
 		{
 			resetGame();
 		}
+
+		if(FlxG.collide(player,corpse))
+		{
+			corpseGrab = true;
+		}
+		for(t in trash)
+		{
+			if (FlxCollision.pixelPerfectCheck(t, player, 1)) {
+				resetGame();
+			}
+		}
+		
+
+
+		if(corpseGrab)
+		{
+			corpse.x = linePos.x;
+			corpse.y = linePos.y;
+			corpse.x = corpse.x - corpse.origin.x +3;
+			corpse.y = corpse.y - corpse.origin.y;
+		}
+
+		FlxSpriteUtil.fill(line, 0);		
+
+		FlxSpriteUtil.drawLine(line, player.x + player.origin.x, player.y + player.origin.y, linePos.x, linePos.y, {
+            thickness: 3,
+            color: 0xFF00FF00
+        });
+
+		super.update(elapsed);
+		FmodManager.Update();
 	}
 
 	function resetGame() {
