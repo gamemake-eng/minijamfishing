@@ -211,8 +211,8 @@ class PlayState extends FlxState
 		{
 			corpse.x = linePos.x;
 			corpse.y = linePos.y;
-			corpse.x = corpse.x + corpse.origin.x -4;
-			corpse.y = corpse.y + corpse.origin.y;
+			corpse.x = (corpse.x - corpse.origin.x)+5;
+			corpse.y = corpse.y - corpse.origin.y;
 		}
 
 		FlxSpriteUtil.fill(line, 0);		
