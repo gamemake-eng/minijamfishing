@@ -97,6 +97,7 @@ class PlayState extends FlxState
 		FlxG.worldDivisions=10;
 
 		trash = new FlxTypedGroup<objects.Trash>();
+		fish = new FlxTypedGroup<objects.Fish>();
 
 		for (layer in tiledLevel.layers)
 		{
@@ -146,6 +147,7 @@ class PlayState extends FlxState
 		add(player);
 		add(walls);
 		add(trash);
+		add(fish);
 		
 
 		watershader = new Water(90);
@@ -225,7 +227,11 @@ class PlayState extends FlxState
 	}
 
 	function resetGame() {
-		FlxG.switchState(new PlayState());
+		player.kill();
+		for (i in 0 ... 10) {
+			add(new objects.Scrap(player.x + player.origin.x, player.y + player.origin.y));
+		}
+		//FlxG.switchState(new PlayState());
 	}
 
 	

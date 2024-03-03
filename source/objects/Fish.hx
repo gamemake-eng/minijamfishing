@@ -10,8 +10,7 @@ class Fish extends FlxSprite {
 		loadGraphic("assets/images/"+images[flixel.FlxG.random.int(0,images.length-1)]+".png");
 		scale.x = 2;
 		scale.y = 2;
-		width = width*2;
-		height = height*2;
+		
 
 		velocity.x = -speed;
 
