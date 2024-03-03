@@ -211,8 +211,8 @@ class PlayState extends FlxState
 		{
 			corpse.x = linePos.x;
 			corpse.y = linePos.y;
-			corpse.x = corpse.x - corpse.origin.x +3;
-			corpse.y = corpse.y - corpse.origin.y;
+			corpse.x = corpse.x + corpse.origin.x -4;
+			corpse.y = corpse.y + corpse.origin.y;
 		}
 
 		FlxSpriteUtil.fill(line, 0);		
@@ -227,10 +227,15 @@ class PlayState extends FlxState
 	}
 
 	function resetGame() {
-		player.kill();
-		for (i in 0 ... 10) {
-			add(new objects.Scrap(player.x + player.origin.x, player.y + player.origin.y));
+		
+		if (!player.isLikeReallyDead) {
+			for (i in 0 ... 10) {
+				add(new objects.Scrap(player.x + player.origin.x, player.y + player.origin.y));
+			}
+			player.kill();
+			player.isLikeReallyDead = true;
 		}
+		
 		//FlxG.switchState(new PlayState());
 	}
 

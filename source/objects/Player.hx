@@ -26,6 +26,8 @@ class Player extends FlxSprite {
 	var leftR:Bool;
 	var rightR:Bool;
 
+	public var isLikeReallyDead:Bool = false;
+
 	var speedVol:Float;
 
 	public var checkpoint:FlxPoint;
