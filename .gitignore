@@ -1,3 +1,5 @@
 export/
 *.sublime-project
 *.sublime-workspace
+
+*.bank
