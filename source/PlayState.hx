@@ -240,6 +240,7 @@ class PlayState extends FlxState
 				add(new objects.Scrap(player.x + player.origin.x, player.y + player.origin.y));
 			}
 			FmodManager.StopSound("engine");
+			FmodManager.PlaySoundOneShot(FmodSFX.Die);
 			player.kill();
 			player.isLikeReallyDead = true;
 		}
