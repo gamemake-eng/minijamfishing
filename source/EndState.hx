@@ -11,21 +11,22 @@ import FmodConstants.FmodSFX;
 
 import FmodConstants.FmodSongs;
 
-class StartState extends FlxState {
+class EndState extends FlxState {
 	override public function create():Void {
         super.create();
 
         var logo = new FlxSprite(0,0);
-        logo.loadGraphic("assets/images/pit.png");
+        logo.loadGraphic("assets/images/gravestone.png");
+        logo.screenCenter();
         
 
-        var loadingText = new FlxText(0, 0, "Gatoraid pond");
+        var loadingText = new FlxText(0, 0, "Fredrick was found");
         loadingText.setFormat(null, 20, FlxColor.WHITE, FlxTextAlign.CENTER, NONE, FlxColor.BLACK);
         loadingText.x = (FlxG.width/2) - loadingText.width/2;
         loadingText.y = (FlxG.height/2) - loadingText.height/2;
         loadingText.y -= 200;
 
-        var startText = new FlxText(0, 0, "Press space to start");
+        var startText = new FlxText(0, 0, "Press space to restart");
         startText.setFormat(null, 20, FlxColor.WHITE, FlxTextAlign.CENTER, NONE, FlxColor.BLACK);
         startText.x = (FlxG.width/2) - startText.width/2;
         startText.y = (FlxG.height/2) - startText.height/2;
@@ -35,8 +36,6 @@ class StartState extends FlxState {
         add(logo);
 		add(loadingText);       
 		add(startText);   
-
-        FmodManager.PlaySong(FmodSongs.Lofi);
 
         FmodManager.SetEventParameterOnSong("Clean", 100);
 

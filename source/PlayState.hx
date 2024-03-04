@@ -52,6 +52,8 @@ class PlayState extends FlxState
 	var trash:FlxTypedGroup<objects.Trash>;
 	var fish:FlxTypedGroup<objects.Fish>;
 
+	var end:FlxSprite;
+
 	var line:FlxSprite;
 	var linePos:FlxPoint;
 	var linePosG:FlxPoint;
@@ -60,6 +62,8 @@ class PlayState extends FlxState
 	var corpseGrab:Bool = false;
 
 	var speed:Float = 0.1;
+
+	var startEnd = false;
 
 
 
@@ -91,9 +95,6 @@ class PlayState extends FlxState
 		tileSize = tiledLevel.tileWidth;
 		mapW = tiledLevel.width;
 		mapH = tiledLevel.height;
-
-		line.makeGraphic(FlxG.width, (tileSize*mapH), 0, true);
-        add(line);
 
 		FlxG.worldBounds.set(0,0,tileSize*mapW,tileSize*mapH);
 		FlxG.worldDivisions=10;
@@ -138,10 +139,22 @@ class PlayState extends FlxState
 		  				add(corpse);
 		  			}
 		  		}
+
+		  		case 'end': {
+		  			for(o in l.objects)
+		  			{
+		  				end = new FlxSprite(o.x,o.y);
+		  				end.makeGraphic(o.width, o.height, FlxColor.BLACK, true);
+		  				add(end);
+		  			}
+		  		}
 		  	}
 		  }
 		    
 	  	}
+
+	  	line.makeGraphic(FlxG.width, (tileSize*mapH), 0, true);
+        add(line);
 
 
 		player = new Player(0,0);
@@ -202,6 +215,21 @@ class PlayState extends FlxState
 		{
 			corpseGrab = true;
 		}
+
+		if(FlxG.overlap(player,end))
+		{
+			if(!startEnd && corpseGrab)
+			{
+    			startEnd = true;
+			}
+		}
+
+		if (startEnd) {
+			FlxG.camera.fade(FlxColor.BLACK, 1, false, function(){
+    				FlxG.switchState(new EndState());
+    		});
+		}
+
 		for(t in trash)
 		{
 			if (FlxCollision.pixelPerfectCheck(t, player, 1)) {
@@ -239,7 +267,7 @@ class PlayState extends FlxState
 
 	function resetGame() {
 		
-		if (!player.isLikeReallyDead) {
+		if (!player.isLikeReallyDead && !startEnd) {
 			for (i in 0 ... 10) {
 				add(new objects.Scrap(player.x + player.origin.x, player.y + player.origin.y));
 			}
