@@ -32,7 +32,7 @@ class FmodLoadState extends FlxState {
         }
 
         if (timer < 0 ) {
-            FlxG.switchState(new PlayState());
+            FlxG.switchState(new StartState());
         }
 
         if (startTimer) {

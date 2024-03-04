@@ -1,5 +1,7 @@
 package;
 
+//credit https://freesound.org/people/RHumphries/sounds/979/
+
 import haxefmod.FmodManager;
 import haxefmod.FmodEvents.FmodCallback;
 import flixel.FlxState;
@@ -156,7 +158,9 @@ class PlayState extends FlxState
 
 		FlxG.game.setFilters([new ShaderFilter(tintshader), new ShaderFilter(watershader)]);
 
-		FmodManager.PlaySong(FmodSongs.Lofi);
+		FmodManager.SetEventParameterOnSong("Clean", 0);
+
+		FlxG.camera.fade(FlxColor.BLACK, 1, true);
 
 	}
 
@@ -243,6 +247,9 @@ class PlayState extends FlxState
 			FmodManager.PlaySoundOneShot(FmodSFX.Die);
 			player.kill();
 			player.isLikeReallyDead = true;
+			FlxG.camera.fade(FlxColor.BLACK, 1, false, function(){
+    			FlxG.switchState(new PlayState());
+    		});
 		}
 		
 		//FlxG.switchState(new PlayState());
