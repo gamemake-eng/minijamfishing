@@ -239,6 +239,7 @@ class PlayState extends FlxState
 			for (i in 0 ... 10) {
 				add(new objects.Scrap(player.x + player.origin.x, player.y + player.origin.y));
 			}
+			FmodManager.StopSound("engine");
 			player.kill();
 			player.isLikeReallyDead = true;
 		}

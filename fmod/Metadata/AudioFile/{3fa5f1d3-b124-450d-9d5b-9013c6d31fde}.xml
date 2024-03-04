@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.00.00">
+	<object class="AudioFile" id="{3fa5f1d3-b124-450d-9d5b-9013c6d31fde}">
+		<property name="assetPath">
+			<value>Effects/979__rhumphries__rbh-glass_break-03.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>2.3568333333333333</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{2ca243da-a8cd-4bb0-ac36-a88037c965ba}</destination>
+		</relationship>
+	</object>
+</objects>
