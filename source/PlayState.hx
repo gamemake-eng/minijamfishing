@@ -204,6 +204,13 @@ class PlayState extends FlxState
 				resetGame();
 			}
 		}
+
+		for(t in fish)
+		{
+			if (FlxCollision.pixelPerfectCheck(t, player, 1)) {
+				resetGame();
+			}
+		}
 		
 
 
@@ -211,7 +218,7 @@ class PlayState extends FlxState
 		{
 			corpse.x = linePos.x;
 			corpse.y = linePos.y;
-			corpse.x = (corpse.x - corpse.origin.x)+5;
+			corpse.x = (corpse.x - corpse.origin.x)-10;
 			corpse.y = corpse.y - corpse.origin.y;
 		}
 
